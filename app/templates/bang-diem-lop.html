@@ -1,0 +1,50 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 3 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Bảng điểm lớp{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <h2 class="mb-3 text-center">BẢNG ĐIỂM LỚP</h2>
+    <table class="table table-bordered">
+    <thead class="text-center">
+    <tr>
+        <th>Lớp: {{ selected_value.lop }}</th>
+        <th>Năm học: {{ selected_value.namhoc }}</th>
+    </tr>
+    </thead>
+    </table>
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light text-center">
+        <tr>
+            <th>STT</th>
+            <th>Họ tên</th>
+            <th>Lớp</th>
+            <th>Điểm TB HK1</th>
+            <th>Điểm TB HK2</th>
+            <th>Điểm TB cả năm</th>
+        </tr>
+        </thead>
+        <tbody class="text-center">
+        {% for bangdiem in bangdiems %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ bangdiem.hoten }}</td>
+            <td>{{ bangdiem.lop }}</td>
+            <td>{{ bangdiem.diemtbhk1 }}</td>
+            <td>{{ bangdiem.diemtbhk2 }}</td>
+            <td>{{ bangdiem.diemtbcn }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

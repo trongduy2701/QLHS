@@ -1,0 +1,139 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 3 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Nhập điểm{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <h2 class="mb-3 text-center">Danh sách điểm</h2>
+    <div class="row mb-3">
+        <form id="searchForm" class="form-inline">
+            <div class="col-auto">
+                <input type="text" id="searchQuery" class="form-control mr-sm-2" placeholder="Tìm kiếm">
+                <button type="button" class="btn btn-success" onclick="searchTimKiem()">Tìm kiếm</button>
+            </div>
+        </form>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light text-center">
+        <tr>
+            <th>Mã điểm</th>
+            <th>Mã phân lớp</th>
+            <th>Mã môn học</th>
+            <th>Mã học kỳ</th>
+            <th>Mã loại điểm</th>
+            <th>Điểm</th>
+        </tr>
+        </thead>
+        <tbody id="timkiemTableBody" class="text-center">
+        {% for diem in diems %}
+        <tr data-madiem="{{ diem.madiem }}" onclick="displayDiemDetails('{{ diem.madiem }}')">
+            <td>{{ diem.madiem }}</td>
+            <td>{{ diem.maphanlop }}</td>
+            <td>{{ diem.mamonhoc }}</td>
+            <td>{{ diem.mahocky }}</td>
+            <td>{{ diem.maloaidiem }}</td>
+            <td>{{ diem.diem }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% for num in diems.iter_pages() %}
+            {% if num %}
+            <li class="page-item {% if num == diems.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('nhap_diem', page=num) }}">{{ num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="mb-5 col-md-6 border rounded p-4 shadow">
+                <h2 class="mb-4 text-center">Thông tin điểm</h2>
+                <form action="/nhap-diem" method="POST">
+                    <div class="mb-3">
+                        <label for="madiem" class="form-label" style="display: none;">Mã điểm:</label>
+                        <input type="hidden" name="madiem" id="madiem" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="maphanlop" class="form-label">Mã phân lớp:</label>
+                        <input list="phanlop" id="maphanlop" name="maphanlop" class="form-control" required>
+                        <datalist id="phanlop">
+                            {% for phanlop in phanlops %}
+                            <option value="{{ phanlop.maphanlop }}">Mã học sinh: {{ phanlop.mahocsinh }} - Mã lớp: {{ phanlop.malop }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="mamonhoc" class="form-label">Mã môn học:</label>
+                        <input list="monhoc" id="mamonhoc" name="mamonhoc" class="form-control" required>
+                        <datalist id="monhoc">
+                            {% for monhoc in monhocs %}
+                            <option value="{{ monhoc.mamonhoc }}">{{ monhoc.tenmonhoc }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="mahocky" class="form-label">Mã học kỳ:</label>
+                        <input list="hocky" id="mahocky" name="mahocky" class="form-control" required>
+                        <datalist id="hocky">
+                            {% for hocky in hockys %}
+                            <option value="{{ hocky.mahocky }}">{{ hocky.tenhocky }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="maloaidiem" class="form-label">Mã loại điểm:</label>
+                        <input list="loaidiem" id="maloaidiem" name="maloaidiem" class="form-control" required>
+                        <datalist id="loaidiem">
+                            {% for loaidiem in loaidiems %}
+                            <option value="{{ loaidiem.maloaidiem }}">{{ loaidiem.tenloaidiem }}</option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="diem" class="form-label">Điểm:</label>
+                        <input type="text" name="diem" id="diem" class="form-control" required>
+                    </div>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-danger">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                    <button type="submit" class="btn btn-primary" name="add">Thêm</button>
+                    <button type="submit" class="btn btn-success" name="edit">Sửa</button>
+                    <button type="submit" class="btn btn-danger" name="delete">Xóa</button>
+                    <button type="reset" class="btn btn-warning">Làm mới</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/nhap-diem.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tim-kiem.js') }}"></script>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

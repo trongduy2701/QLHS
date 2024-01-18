@@ -1,0 +1,134 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 2 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Tiếp nhận học sinh{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <h2 class="mb-3 text-center">Danh sách học sinh</h2>
+    <div class="row mb-3">
+        <form id="searchForm" class="form-inline">
+            <div class="col-auto">
+                <input type="text" id="searchQuery" class="form-control mr-sm-2" placeholder="Tìm kiếm">
+                <button type="button" class="btn btn-success" onclick="searchTimKiem()">Tìm kiếm</button>
+            </div>
+        </form>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light text-center">
+        <tr>
+            <th>Mã học sinh</th>
+            <th>Họ tên</th>
+            <th>Ngày sinh</th>
+            <th>Giới tính</th>
+            <th>Email</th>
+            <th>Số điện thoại</th>
+            <th>Địa chỉ</th>
+        </tr>
+        </thead>
+        <tbody id="timkiemTableBody" class="text-center">
+        {% for hocsinh in hocsinhs %}
+        <tr data-mahocsinh="{{ hocsinh.mahocsinh }}" onclick="displayStudentDetails('{{ hocsinh.mahocsinh }}')">
+            <td>{{ hocsinh.mahocsinh }}</td>
+            <td>{{ hocsinh.tenhocsinh }}</td>
+            <td>{{ hocsinh.ngaysinh }}</td>
+            <td>{{ hocsinh.gioitinh }}</td>
+            <td>{{ hocsinh.email }}</td>
+            <td>{{ hocsinh.sodienthoai }}</td>
+            <td>{{ hocsinh.diachi }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% for num in hocsinhs.iter_pages() %}
+            {% if num %}
+            <li class="page-item {% if num == hocsinhs.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('tiep_nhan', page=num) }}">{{ num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="mb-5 col-md-6 border rounded p-4 shadow">
+                <h2 class="mb-4 text-center">Hồ sơ học sinh</h2>
+                <form action="/tiep-nhan" method="POST">
+
+                    <div class="mb-3">
+                        <label for="mahocsinh" class="form-label">Mã học sinh:</label>
+                        <input type="text" name="mahocsinh" id="mahocsinh" class="form-control" placeholder="HS..." required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tenhocsinh" class="form-label">Tên học sinh:</label>
+                        <input type="text" name="tenhocsinh" id="tenhocsinh" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="ngaysinh" class="form-label">Ngày sinh:</label>
+                        <input type="date" name="ngaysinh" id="ngaysinh" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="gioitinh" class="form-label">Giới tính:</label>
+                        <input list="gt" id="gioitinh" name="gioitinh" class="form-control" required>
+                        <datalist id="gt">
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </datalist>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="sodienthoai" class="form-label">Số điện thoại:</label>
+                        <input type="text" name="sodienthoai" id="sodienthoai" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="diachi" class="form-label">Địa chỉ:</label>
+                        <input type="text" name="diachi" id="diachi" class="form-control" required>
+                    </div>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for message in messages %}
+                                    {{ message }}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                    <button type="submit" class="btn btn-primary" name="add">Thêm</button>
+                    <button type="submit" class="btn btn-success" name="edit">Sửa</button>
+                    <button type="submit" class="btn btn-danger" name="delete">Xóa</button>
+                    <button type="reset" class="btn btn-warning">Làm mới</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/tiep-nhan.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tim-kiem.js') }}"></script>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

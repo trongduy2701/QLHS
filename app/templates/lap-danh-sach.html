@@ -1,0 +1,57 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 2 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Lập danh sách{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <form action="/lap-danh-sach" method="POST">
+        <div class="row mt-3 mb-3">
+            <div class="col">
+                <select name="manamhoc" id="manamhoc" class="custom-select">
+                    <option value="">Chọn năm học</option>
+                    {% for namhoc in namhocs %}
+                    <option value="{{ namhoc.manamhoc }}">{{ namhoc.tennamhoc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <select name="makhoilop" id="makhoilop" class="custom-select">
+                    <option value="">Chọn khối</option>
+                    {% for khoilop in khoilops %}
+                    <option value="{{ khoilop.makhoilop }}">{{ khoilop.tenkhoilop }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <select name="malop" id="malop" class="custom-select">
+                    <option value="">Chọn lớp</option>
+                    {% for lop in lops %}
+                    <option value=" {{ lop.malop }}">{{ lop.tenlop }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3 mb-3">
+            <div class="col-auto">
+                <button class="btn btn-success" type="submit">Xem danh sách</button>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-success" type="submit" name="export">Xuất danh sách</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/lap-danh-sach.js') }}"></script>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

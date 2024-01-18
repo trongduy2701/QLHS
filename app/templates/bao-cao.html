@@ -1,0 +1,94 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 1 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Thống kê báo cáo{% endblock %}
+
+{% block content %}
+<div style="max-width: 400px; margin: auto;">
+    <canvas id="myChart" width="600" height="300"></canvas>
+</div>
+<div class="container mt-5 mb-5">
+    <h2 class="mb-3 text-center">BÁO CÁO TỔNG KẾT MÔN HỌC</h2>
+    <table class="table table-bordered">
+    <thead class="text-center">
+    <tr>
+        <th>Môn: {{ selected_value.monhoc }}</th>
+        <th>Năm học: {{ selected_value.namhoc }}</th>
+        <th>{{ selected_value.hocky }}</th>
+    </tr>
+    </thead>
+    </table>
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light text-center">
+        <tr>
+            <th>STT</th>
+            <th>Lớp</th>
+            <th>Sĩ số</th>
+            <th>Số lượng đạt</th>
+            <th>Tỷ lệ</th>
+        </tr>
+        </thead>
+        <tbody class="text-center">
+        {% for baocao in baocaos %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ baocao.lop }}</td>
+            <td>{{ baocao.siso }}</td>
+            <td>{{ baocao.soluongdat }}</td>
+            <td>{{ baocao.tyle }}%</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var lopData = {{ baocaos | map(attribute='lop') | list | tojson }};
+
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF';
+        var color = '#';
+        for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+    var backgroundColors = Array.from({ length: 10 }, () => getRandomColor());
+    var borderColors = backgroundColors.map(color => color.replace('0.2', '1'));
+
+    var data = {
+        labels: lopData,
+        datasets: [{
+            label: "Tỉ lệ đạt",
+            data: {{ baocaos | map(attribute='tyle') | list | tojson }},
+            backgroundColor: backgroundColors,
+            borderColor: borderColors,
+            borderWidth: 1
+        }]
+    };
+
+     var options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+     };
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: data,
+        options: options
+    });
+</script>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>404 Not Found</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div class="container">
+        {% if current_user.is_authenticated %}
+            <h1>Bạn không có quyền truy cập!</h1>
+            <a href="/" role="button">Trang chủ</a>
+        {% else %}
+            <h1>Vui lòng đăng nhập!</h1>
+            <a href="/" role="button">Trang chủ</a>
+        {% endif %}
+    </div>
+</body>
+</html>

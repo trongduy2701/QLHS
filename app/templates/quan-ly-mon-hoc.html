@@ -1,0 +1,96 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 1 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Quản lý môn học{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <h2 class="mb-3 text-center">Danh sách môn học</h2>
+    <div class="row mb-3">
+        <form id="searchForm" class="form-inline">
+            <div class="col-auto">
+                <input type="text" id="searchQuery" class="form-control mr-sm-2" placeholder="Tìm kiếm">
+                <button type="button" class="btn btn-success" onclick="searchTimKiem()">Tìm kiếm</button>
+            </div>
+        </form>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light text-center">
+        <tr>
+            <th>Mã môn học</th>
+            <th>Tên môn học</th>
+        </tr>
+        </thead>
+        <tbody id="timkiemTableBody" class="text-center">
+        {% for monhoc in monhocs %}
+        <tr data-mamonhoc="{{ monhoc.mamonhoc }}" onclick="displayMonHocDetails('{{ monhoc.mamonhoc }}')">
+            <td>{{ monhoc.mamonhoc }}</td>
+            <td>{{ monhoc.tenmonhoc }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% for num in monhocs.iter_pages() %}
+            {% if num %}
+            <li class="page-item {% if num == monhocs.page %}active{% endif %}">
+                <a class="page-link" href="{{ url_for('quan_ly_mon_hoc', page=num) }}">{{ num }}</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="mb-5 col-md-6 border rounded p-4 shadow">
+                <h2 class="mb-4 text-center">Thông tin môn học</h2>
+                <form action="/quan-ly-mon-hoc" method="POST">
+
+                    <div class="mb-3">
+                        <label for="mamonhoc" class="form-label">Mã môn học:</label>
+                        <input type="text" name="mamonhoc" id="mamonhoc" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tenmonhoc" class="form-label">Tên môn học:</label>
+                        <input type="text" name="tenmonhoc" id="tenmonhoc" class="form-control" required>
+                    </div>
+
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for message in messages %}
+                                <li>{{ message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                    <button type="submit" class="btn btn-primary" name="add">Thêm</button>
+                    <button type="submit" class="btn btn-success" name="edit">Sửa</button>
+                    <button type="submit" class="btn btn-danger" name="delete">Xóa</button>
+                    <button type="reset" class="btn btn-warning">Làm mới</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/quan-ly-mon-hoc.js') }}"></script>
+<script src="{{ url_for('static', filename='js/tim-kiem.js') }}"></script>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

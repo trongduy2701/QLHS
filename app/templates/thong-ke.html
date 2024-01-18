@@ -1,0 +1,55 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 1 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Thống kê báo cáo{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <form action="/thong-ke-bao-cao" method="POST">
+        <div class="row mt-3 mb-3">
+            <div class="col">
+                <select name="namhoc" id="namhoc" class="custom-select">
+                    <option value="">Chọn năm học</option>
+                    {% for namhoc in namhocs %}
+                    <option value="{{ namhoc.namhoc }}">{{ namhoc.namhoc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <select name="hocky" id="hocky" class="custom-select">
+                    <option value="">Chọn học kỳ</option>
+                    {% for hocky in hockys %}
+                    <option value="{{ hocky.hocky }}">{{ hocky.hocky }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <select name="monhoc" id="monhoc" class="custom-select">
+                    <option value="">Chọn môn học</option>
+                    {% for monhoc in monhocs %}
+                    <option value="{{ monhoc.monhoc }}">{{ monhoc.monhoc }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        <div class="row mt-3 mb-3">
+            <div class="col-auto">
+                <button class="btn btn-success" type="submit">Xem thống kê</button>
+            </div>
+            <div class="col-auto">
+                <button class="btn btn-success" type="submit" name="export">Xuất báo cáo</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

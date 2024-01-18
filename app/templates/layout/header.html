@@ -1,0 +1,63 @@
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+    <a class="navbar-brand" href="/">Trang chủ</a>
+    <ul class="navbar-nav">
+    {% if current_user.is_authenticated %}
+        {% if current_user.loainguoidung.value == 1 %}
+
+        <li class="nav-item">
+            <a class="nav-link" href="/thong-ke-bao-cao">Thống kê báo cáo</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/thay-doi-quy-dinh">Thay đổi quy định</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/quan-ly-mon-hoc">Quản lý môn học</a>
+        </li>
+
+        {% elif current_user.loainguoidung.value == 2 %}
+        <li class="nav-item">
+            <a class="nav-link" href="/tiep-nhan">Tiếp nhận học sinh</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/lap-danh-sach">Lập danh sách lớp</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/dieu-chinh-lop">Điều chỉnh lớp</a>
+        </li>
+
+        {% elif current_user.loainguoidung.value == 3 %}
+        <li class="nav-item">
+            <a class="nav-link" href="/nhap-diem">Nhập điểm</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/bang-diem-mon">Bảng điểm môn</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/bang-diem-trung-binh">Bảng điểm trung bình</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="/bang-diem-lop">Bảng điểm lớp</a>
+        </li>
+        {% endif %}
+
+        <li class="nav-item">
+            <a class="nav-link text-info" href="/profile">Chào {{ current_user.tennguoidung }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/logout">Đăng xuất</a>
+        </li>
+    {% else %}
+
+        <li class="nav-item">
+            <a class="nav-link" href="/login">Đăng nhập</a>
+        </li>
+    {% endif %}
+    </ul>
+</nav>

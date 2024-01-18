@@ -1,0 +1,74 @@
+{% if current_user.is_authenticated and current_user.loainguoidung.value == 1 %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Thay đổi quy định{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <h2 class="mb-3 text-center">Danh sách quy định</h2>
+    <table class="table table-bordered table-hover">
+        <thead class="thead-light text-center">
+        <tr>
+            <th>Mã quy định</th>
+            <th>Tên quy định</th>
+            <th>Giá trị</th>
+        </tr>
+        </thead>
+        <tbody id="quydinhTableBody" class="text-center">
+        {% for quydinh in quydinhs %}
+        <tr data-maquydinh="{{ quydinh.maquydinh }}" onclick="displayQuyDinhDetails('{{ quydinh.maquydinh }}')">
+            <td>{{ quydinh.maquydinh }}</td>
+            <td>{{ quydinh.tenquydinh }}</td>
+            <td>{{ quydinh.giatri }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="mb-5 col-md-6 border rounded p-4 shadow">
+                <h2 class="mb-4 text-center">Thông tin quy định</h2>
+                <form action="/thay-doi-quy-dinh" method="post">
+
+                    <div class="mb-3">
+                        <label for="maquydinh" class="form-label" style="display: none;">Mã quy định:</label>
+                        <input type="hidden" name="maquydinh" id="maquydinh" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="tenquydinh" class="form-label">Tên quy định:</label>
+                        <input type="text" name="tenquydinh" id="tenquydinh" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="giatri" class="form-label">Giá trị</label>
+                        <input type="text" name="giatri" id="giatri" class="form-control" required>
+                    </div>
+                    {% with messages = get_flashed_messages() %}
+                        {% if messages %}
+                        <div class="alert alert-danger">
+                            {% for message in messages %}
+                                {{ message }}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    {% endwith %}
+                    <button type="submit" class="btn btn-success" name="edit">Thay đổi</button>
+                    <button type="reset" class="btn btn-warning">Làm mới</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/thay-doi-quy-dinh.js') }}"></script>
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}

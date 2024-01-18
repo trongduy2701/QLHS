@@ -1,0 +1,51 @@
+{% if current_user.is_authenticated %}
+
+{% extends 'layout/base.html' %}
+
+{% block tittle %}Người dùng{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5 mb-5">
+    <div class="card custom-card">
+        <div class="card-header text-center">
+            <h5>Thông tin người dùng</h5>
+        </div>
+        <div class="card-body p-0">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="title-col">Tài khoản:</div>
+                    <div class="content-col">{{ user_info.taikhoan }}</div>
+                </li>
+                <li class="list-group-item">
+                    <div class="title-col">Tên người dùng:</div>
+                    <div class="content-col">{{ user_info.tennguoidung }}</div>
+                </li>
+                <li class="list-group-item">
+                    <div class="title-col">Giới tính:</div>
+                    <div class="content-col">{{ user_info.gioitinh }}</div>
+                </li>
+                <li class="list-group-item">
+                    <div class="title-col">Email:</div>
+                    <div class="content-col">{{ user_info.email }}</div>
+                </li>
+                <li class="list-group-item">
+                    <div class="title-col">Số điện thoại:</div>
+                    <div class="content-col">{{ user_info.sodienthoai }}</div>
+                </li>
+
+                <li class="list-group-item">
+                    <a href="/doi-mat-khau" class="btn btn-info btn-block" role="button">Đổi mật khẩu</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% else %}
+
+{% include 'layout/404.html' %}
+
+{% endif %}
